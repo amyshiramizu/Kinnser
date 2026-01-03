@@ -1,7 +1,6 @@
 {
   "name": "med-list-parser",
   "version": "1.0.0",
-  "description": "Parse medication lists from screenshots for Kinnser entry",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0"
   }
