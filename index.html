@@ -271,6 +271,55 @@
       font-size: 14px;
     }
     
+    .indication-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    
+    .indication-input:focus {
+      outline: none;
+      border-color: #4299e1;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    }
+    
+    .covered-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .covered-btn {
+      padding: 8px 20px;
+      border: 2px solid #e2e8f0;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: #4a5568;
+      transition: all 0.2s;
+    }
+    
+    .covered-btn:hover {
+      border-color: #4299e1;
+    }
+    
+    .covered-btn.active[data-value="yes"] {
+      background: #48bb78;
+      border-color: #48bb78;
+      color: white;
+    }
+    
+    .covered-btn.active[data-value="no"] {
+      background: #f56565;
+      border-color: #f56565;
+      color: white;
+    }
+    
     .copy-btn {
       background: #edf2f7;
       border: none;
@@ -527,7 +576,10 @@
       
       <p style="margin: 20px 0;"><strong>Drag this to your bookmarks bar:</strong></p>
       
-      <a href="javascript:(function(){var d=localStorage.getItem('kinnserMeds');if(!d){d=prompt('Paste medication data from the parser:');if(!d)return;localStorage.setItem('kinnserMeds',d);localStorage.setItem('kinnserMedIndex','0');}var meds=JSON.parse(d);var idx=parseInt(localStorage.getItem('kinnserMedIndex')||'0');if(idx>=meds.length){alert('All '+meds.length+' medications entered! Clearing data.');localStorage.removeItem('kinnserMeds');localStorage.removeItem('kinnserMedIndex');return;}var med=meds[idx];var filled=[];function setVal(sel,val){var el=document.querySelector(sel);if(el&&val){el.value=val;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));filled.push(sel);}}function setCheck(sel,val){var el=document.querySelector(sel);if(el){el.checked=val;el.dispatchEvent(new Event('change',{bubbles:true}));filled.push(sel);}}var today=new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'});setVal('input[name*=\"edication\"][name*=\"ame\"],input[id*=\"edication\"][id*=\"ame\"],input[name*=\"drug\"],#drugName,#medicationName,input[placeholder*=\"edication\"]',med.medication_name);setVal('input[name*=\"tart\"][name*=\"ate\"],input[id*=\"tart\"][id*=\"ate\"],#startDate,input[name=\"startDate\"]',today);setVal('select[name*=\"requency\"],select[id*=\"requency\"],#frequency,select[name=\"frequency\"]',med.frequency);setVal('textarea[name*=\"nstruction\"],textarea[id*=\"nstruction\"],#instructions,#medicationInstructions,textarea[name*=\"sig\"],textarea[name=\"instructions\"]',med.instructions);setVal('input[name*=\"ndication\"],input[id*=\"ndication\"],textarea[name*=\"ndication\"],#indication',med.indication||'');if(med.is_prn){setCheck('input[type=\"checkbox\"][name*=\"prn\"],input[type=\"checkbox\"][id*=\"prn\"],#prn,input[name=\"prn\"]',true);}localStorage.setItem('kinnserMedIndex',String(idx+1));alert('Filled med '+(idx+1)+'/'+meds.length+': '+med.medication_name.substring(0,40)+'...\\n\\nFields filled: '+filled.length+'\\n\\nClick Save, then click bookmarklet again for next med.');})();" class="bookmarklet-link" onclick="event.preventDefault();alert('Drag this to your bookmarks bar - don\'t click it!');">📋 Kinnser Med Filler</a>
+      <a href="javascript:void(0);" id="bookmarkletLink" class="bookmarklet-link">📋 Kinnser Med Filler</a>
+      <p style="margin-top: 10px; font-size: 14px; color: #666;">Copy the bookmarklet code below and create a new bookmark with it:</p>
+      <textarea id="bookmarkletCode" readonly style="width: 100%; height: 80px; font-family: monospace; font-size: 11px; margin-top: 10px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">javascript:(function(){var d=localStorage.getItem('kinnserMeds');if(!d){d=prompt('Paste medication data from the parser:');if(!d)return;localStorage.setItem('kinnserMeds',d);localStorage.setItem('kinnserMedIndex','0');}var meds=JSON.parse(d);var idx=parseInt(localStorage.getItem('kinnserMedIndex')||'0');if(idx>=meds.length){alert('All '+meds.length+' medications entered!');localStorage.removeItem('kinnserMeds');localStorage.removeItem('kinnserMedIndex');return;}var med=meds[idx];function setVal(el,val){if(el&&val){el.value=val;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}}function setCheck(el,val){if(el){el.checked=val;el.dispatchEvent(new Event('change',{bubbles:true}));}}var today=new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'});var inputs=document.querySelectorAll('input,textarea,select');inputs.forEach(function(el){var n=(el.name||'').toLowerCase();var id=(el.id||'').toLowerCase();if(n.includes('medication')||n.includes('drug')||id.includes('medication')||id.includes('drug')){setVal(el,med.medication_name);}if(n.includes('start')&&n.includes('date')||id.includes('start')&&id.includes('date')){setVal(el,today);}if(n.includes('frequency')||id.includes('frequency')){setVal(el,med.frequency);}if(n.includes('instruction')||n.includes('sig')||id.includes('instruction')||id.includes('sig')){setVal(el,med.instructions);}if(n.includes('indication')||id.includes('indication')){setVal(el,med.indication||'');}if((n.includes('prn')||id.includes('prn'))&&el.type==='checkbox'){setCheck(el,med.is_prn);}});localStorage.setItem('kinnserMedIndex',String(idx+1));alert('Filled med '+(idx+1)+'/'+meds.length+': '+med.medication_name.substring(0,40));})();</textarea>
+      <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('bookmarkletCode').value);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Bookmarklet Code',2000);" style="margin-left: 0; margin-top: 10px;">Copy Bookmarklet Code</button>
       
       <div style="margin-top: 30px; padding: 20px; background: #f7fafc; border-radius: 8px;">
         <h3 style="margin-top: 0;">How to Use:</h3>
@@ -704,19 +756,20 @@
       medCount.textContent = `${medications.length} medication${medications.length !== 1 ? 's' : ''}`;
       
       // Generate copy-all text (tab-separated)
-      const headers = ['Medication Name', 'Frequency', 'Instructions', 'PRN', 'Indication'];
+      const headers = ['Medication Name', 'Frequency', 'Instructions', 'PRN', 'Indication', 'Covered'];
       const rows = medications.map(med => [
         med.medication_name,
         med.frequency,
         med.instructions,
         med.is_prn ? 'Yes' : 'No',
-        med.indication || ''
+        med.indication || '',
+        med.is_covered === true ? 'Yes' : med.is_covered === false ? 'No' : ''
       ].join('\t'));
       copyAllText.value = [headers.join('\t'), ...rows].join('\n');
       
       // Generate medication cards
       medList.innerHTML = medications.map((med, i) => `
-        <div class="med-card ${med.is_prn ? 'prn' : ''}">
+        <div class="med-card ${med.is_prn ? 'prn' : ''}" data-index="${i}">
           <div class="med-header">
             <span class="med-name">${i + 1}. ${escapeHtml(med.medication_name)}</span>
             ${med.is_prn ? '<span class="prn-badge">PRN</span>' : ''}
@@ -734,8 +787,15 @@
             </div>
             <div class="detail-group">
               <div class="detail-label">Indication</div>
-              <div class="detail-value">${med.indication ? escapeHtml(med.indication) : '<em style="color: #a0aec0;">Not specified</em>'}</div>
-              ${med.indication ? `<button class="copy-btn" onclick="copyText(this, '${escapeAttr(med.indication)}')">Copy</button>` : ''}
+              <input type="text" class="indication-input" data-index="${i}" value="${escapeAttr(med.indication || '')}" placeholder="Enter indication..." onchange="updateIndication(${i}, this.value)">
+              <button class="copy-btn" onclick="copyText(this, document.querySelector('.indication-input[data-index=\\'${i}\\']').value)">Copy</button>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Covered?</div>
+              <div class="covered-toggle">
+                <button class="covered-btn ${med.is_covered === true ? 'active' : ''}" data-index="${i}" data-value="yes" onclick="setCovered(${i}, true)">Yes</button>
+                <button class="covered-btn ${med.is_covered === false ? 'active' : ''}" data-index="${i}" data-value="no" onclick="setCovered(${i}, false)">No</button>
+              </div>
             </div>
           </div>
         </div>
@@ -762,6 +822,24 @@
           btn.textContent = 'Copy';
           btn.classList.remove('copied');
         }, 1500);
+      });
+    }
+    
+    function updateIndication(index, value) {
+      parsedMedications[index].indication = value;
+    }
+    
+    function setCovered(index, value) {
+      parsedMedications[index].is_covered = value;
+      // Update UI
+      const card = document.querySelector(`.med-card[data-index="${index}"]`);
+      const buttons = card.querySelectorAll('.covered-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if ((btn.dataset.value === 'yes' && value === true) || 
+            (btn.dataset.value === 'no' && value === false)) {
+          btn.classList.add('active');
+        }
       });
     }
     
