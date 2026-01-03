@@ -578,22 +578,24 @@
       
       <a href="javascript:void(0);" id="bookmarkletLink" class="bookmarklet-link">📋 Kinnser Med Filler</a>
       <p style="margin-top: 10px; font-size: 14px; color: #666;">Copy the bookmarklet code below and create a new bookmark with it:</p>
-      <textarea id="bookmarkletCode" readonly style="width: 100%; height: 80px; font-family: monospace; font-size: 11px; margin-top: 10px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">javascript:(function(){var d=localStorage.getItem('kinnserMeds');if(!d){d=prompt('Paste medication data from the parser:');if(!d)return;localStorage.setItem('kinnserMeds',d);localStorage.setItem('kinnserMedIndex','0');}var meds=JSON.parse(d);var idx=parseInt(localStorage.getItem('kinnserMedIndex')||'0');if(idx>=meds.length){alert('All '+meds.length+' medications entered!');localStorage.removeItem('kinnserMeds');localStorage.removeItem('kinnserMedIndex');return;}var med=meds[idx];function setVal(el,val){if(el&&val){el.value=val;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}}function setCheck(el,val){if(el){el.checked=val;el.dispatchEvent(new Event('change',{bubbles:true}));}}var today=new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'});var inputs=document.querySelectorAll('input,textarea,select');inputs.forEach(function(el){var n=(el.name||'').toLowerCase();var id=(el.id||'').toLowerCase();if(n.includes('medication')||n.includes('drug')||id.includes('medication')||id.includes('drug')){setVal(el,med.medication_name);}if(n.includes('start')&&n.includes('date')||id.includes('start')&&id.includes('date')){setVal(el,today);}if(n.includes('frequency')||id.includes('frequency')){setVal(el,med.frequency);}if(n.includes('instruction')||n.includes('sig')||id.includes('instruction')||id.includes('sig')){setVal(el,med.instructions);}if(n.includes('indication')||id.includes('indication')){setVal(el,med.indication||'');}if((n.includes('prn')||id.includes('prn'))&&el.type==='checkbox'){setCheck(el,med.is_prn);}});localStorage.setItem('kinnserMedIndex',String(idx+1));alert('Filled med '+(idx+1)+'/'+meds.length+': '+med.medication_name.substring(0,40));})();</textarea>
+      <textarea id="bookmarkletCode" readonly style="width: 100%; height: 100px; font-family: monospace; font-size: 11px; margin-top: 10px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">javascript:(function(){var d=localStorage.getItem('kinnserMeds');if(!d){d=prompt('Paste medication data from the parser:');if(!d)return;localStorage.setItem('kinnserMeds',d);localStorage.setItem('kinnserMedIndex','0');}var meds=JSON.parse(d);var idx=parseInt(localStorage.getItem('kinnserMedIndex')||'0');if(idx>=meds.length){alert('All '+meds.length+' medications entered! Data cleared.');localStorage.removeItem('kinnserMeds');localStorage.removeItem('kinnserMedIndex');return;}var med=meds[idx];var today=new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'});var info='MED '+(idx+1)+'/'+meds.length+'\n\n';info+='SEARCH FOR:\n'+med.medication_name+'\n\n';info+='FREQUENCY: '+med.frequency+'\n';info+='INSTRUCTIONS: '+med.instructions+'\n';info+='PRN: '+(med.is_prn?'YES - Check the PRN box':'No')+'\n';info+='INDICATION: '+(med.indication||'(none)')+'\n';info+='COVERED: '+(med.is_covered===true?'Yes':med.is_covered===false?'No':'(not set)')+'\n';info+='\nSTART DATE: '+today;localStorage.setItem('kinnserMedIndex',String(idx+1));prompt('Copy medication info (Cmd+C), then click OK for next med:',med.medication_name);alert(info);})();</textarea>
       <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('bookmarkletCode').value);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Bookmarklet Code',2000);" style="margin-left: 0; margin-top: 10px;">Copy Bookmarklet Code</button>
       
       <div style="margin-top: 30px; padding: 20px; background: #f7fafc; border-radius: 8px;">
         <h3 style="margin-top: 0;">How to Use:</h3>
         <ol style="color: #4a5568;">
           <li>Parse medications in the "Parse Meds" tab</li>
+          <li>Edit indications and set Covered status as needed</li>
           <li>Click "Copy Meds for Kinnser"</li>
           <li>Go to Kinnser → Patient → Add New Medication</li>
-          <li>Click the "Kinnser Med Filler" bookmarklet in your bookmarks bar</li>
-          <li>First time: it will ask you to paste the data - just Cmd+V and OK</li>
-          <li>It fills in the form fields automatically</li>
-          <li>Verify the data, select Yes/No for coverage, click Save (or Save and Add Additional)</li>
-          <li>Click the bookmarklet again for the next medication</li>
-          <li>Repeat until all meds are entered!</li>
+          <li>Click the "Kinnser Med Filler" bookmarklet</li>
+          <li>First time: paste the data when prompted (Cmd+V)</li>
+          <li>A prompt shows the medication name - copy it (Cmd+C) and click OK</li>
+          <li>An alert shows all the details (frequency, instructions, PRN, etc.)</li>
+          <li>Search for the medication in Kinnser, fill in the other fields from the alert</li>
+          <li>Click Save, then click the bookmarklet again for the next med</li>
         </ol>
+        <p style="margin-top: 15px; color: #718096; font-size: 14px;"><strong>Note:</strong> Since Kinnser uses a medication search/lookup, you'll need to manually search and select each medication. The bookmarklet gives you all the info to fill in quickly.</p>
       </div>
       
       <div style="margin-top: 20px; padding: 20px; background: #fff5f5; border-radius: 8px;">
