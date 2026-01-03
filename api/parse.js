@@ -4,7 +4,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY
 });
 
-module.exports = async (req, res) => {
+module.exports = async function handler(req, res) {
   // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -99,4 +99,4 @@ Return ONLY valid JSON in this exact format, no other text:
       details: error.message 
     });
   }
-};
+}
